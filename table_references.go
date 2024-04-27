@@ -22,13 +22,19 @@ joined_table: {
 }
 */
 type tableReferences struct {
-	tableName string
+	tableName *word
+}
+
+func newTableReferences(tableName string) tableReferences {
+	return tableReferences{
+		tableName: newWord(tableName, true),
+	}
 }
 
 func (tr tableReferences) String() string {
-	return tr.tableName
+	return tr.tableName.String()
 }
 
-func (tr tableReferences) Words() []string {
-	return []string{"`" + tr.tableName + "`"}
+func (tr tableReferences) Words() *word {
+	return tr.tableName
 }

@@ -24,11 +24,11 @@ func (l limit) String() string {
 	return fmt.Sprintf("LIMIT %d", l.limit)
 }
 
-func (l limit) Words() []string {
+func (l limit) Words() *word {
 	if !l.exist {
-		return []string{}
+		return newWord("", false)
 	}
-	return []string{
-		"LIMIT", fmt.Sprint(l.limit),
-	}
+	root := newWord("LIMIT", false)
+	root.n(newWord(l.limit, false))
+	return root
 }

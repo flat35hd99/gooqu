@@ -1,3 +1,3 @@
 module github.com/flat35hd99/gooqu
 
-go 1.13
+go 1.22

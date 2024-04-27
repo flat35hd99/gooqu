@@ -4,30 +4,24 @@ import "fmt"
 
 // もっと込み入ったものにできる
 type expression struct {
-	columnName  string
-	columnValue interface{}
+	columnName  word
+	columnValue word
+}
+
+func newExpression(columnName, columnValue interface{}) expression {
+	return expression{
+		columnName:  *newWord(columnName, true),
+		columnValue: *newWord(columnValue, true),
+	}
 }
 
 func (exp expression) String() string {
-	var columnValue string
-	switch v := exp.columnValue.(type) {
-	case int:
-		columnValue = fmt.Sprint(v)
-	case string:
-		columnValue = v
-	}
-	return fmt.Sprintf("`%s` = %s", exp.columnName, columnValue)
+	return fmt.Sprintf("`%s` = %s", exp.columnName, exp.columnValue)
 }
 
-func (exp expression) Words() []string {
-	var columnValue string
-	switch v := exp.columnValue.(type) {
-	case int:
-		columnValue = fmt.Sprint(v)
-	case string:
-		columnValue = v
-	}
-	return []string{
-		"`" + exp.columnName + "`", "=", columnValue,
-	}
+func (exp expression) Words() *word {
+	// id = 1
+	equal := newWord("=", false)
+	exp.columnName.n(equal).n(&exp.columnValue)
+	return &exp.columnName
 }

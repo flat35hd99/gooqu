@@ -26,6 +26,6 @@ func (q Query) ToSQL() string {
 	//       そうしないと、flagが無限に増えてパターンが指数関数的に増える。
 	// return fmt.Sprintf("SELECT * FROM `%s` WHERE %s;", q.tableReferences, q.whereCondition)
 	root := newWord("", false)
-	root.n(q.tableReferences.Words()).n(newWord("WHERE", false)).n(q.whereCondition.Words()).n(q.limit.Words()).n(newWord(";", false))
+	root.n(q.tableReferences).n(newWord("WHERE", false)).n(q.whereCondition).n(q.limit).n(newWord(";", false))
 	return "SELECT * FROM " + root.String()
 }

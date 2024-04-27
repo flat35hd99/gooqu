@@ -12,6 +12,10 @@ type word struct {
 	escaped bool
 }
 
+type worder interface {
+	Words() *word
+}
+
 func newWord(value interface{}, escaped bool) *word {
 	var v string
 	switch value := value.(type) {
@@ -35,8 +39,13 @@ func newWord(value interface{}, escaped bool) *word {
 	}
 }
 
-func (w *word) n(next *word) *word {
-	w.next = next
+// func (w *word) n(next *word) *word {
+// 	w.next = next
+// 	return w.last()
+// }
+
+func (w *word) n(next worder) *word {
+	w.next = (next).Words()
 	return w.last()
 }
 
@@ -67,4 +76,8 @@ func (w word) String() string {
 	} else {
 		return v
 	}
+}
+
+func (w *word) Words() *word {
+	return w
 }

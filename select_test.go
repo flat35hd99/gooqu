@@ -42,4 +42,22 @@ func TestSelect(t *testing.T) {
 			t.Errorf("expected %s but got %s", expected, query)
 		}
 	})
+
+	t.Run("SELECT `id` FROM `users` WHERE `id` = `1`;", func(t *testing.T) {
+		query := gooqu.Where(gooqu.Record{"id": 1}).Select(gooqu.Column{"id"}).From("users").ToSQL()
+
+		expected := "SELECT `id` FROM `users` WHERE `id` = `1` ;"
+		if query != expected {
+			t.Errorf("expected %s but got %s", expected, query)
+		}
+	})
+
+	t.Run("SELECT `id`, `name` FROM `users` WHERE `id` = `1`;", func(t *testing.T) {
+		query := gooqu.Where(gooqu.Record{"id": 1}).Select(gooqu.Column{"id"}, gooqu.Column{"name"}).From("users").ToSQL()
+
+		expected := "SELECT `id` , `name` FROM `users` WHERE `id` = `1` ;"
+		if query != expected {
+			t.Errorf("expected %s but got %s", expected, query)
+		}
+	})
 }

@@ -13,6 +13,9 @@ type word struct {
 }
 
 type worder interface {
+	/*
+		return the head of word list
+	*/
 	Words() *word
 }
 
@@ -38,11 +41,6 @@ func newWord(value interface{}, escaped bool) *word {
 		escaped: escaped,
 	}
 }
-
-// func (w *word) n(next *word) *word {
-// 	w.next = next
-// 	return w.last()
-// }
 
 func (w *word) n(next worder) *word {
 	w.next = (next).Words()

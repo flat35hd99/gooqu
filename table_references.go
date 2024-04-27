@@ -31,10 +31,6 @@ func newTableReferences(tableName string) tableReferences {
 	}
 }
 
-func (tr tableReferences) String() string {
-	return tr.tableName.String()
-}
-
 func (tr tableReferences) Words() *word {
 	return tr.tableName
 }

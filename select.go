@@ -6,7 +6,6 @@ type Query struct {
 	whereCondition  expression
 	tableReferences tableReferences
 	limit           limit
-	hasLimitClause  bool
 }
 
 func Where(record Record) *Query {
@@ -26,6 +25,7 @@ func (q Query) ToSQL() string {
 	// TODO: スライスの要素を前から順にpopして、文字列にする、みたいなことをしないといけない。
 	//       そうしないと、flagが無限に増えてパターンが指数関数的に増える。
 	// return fmt.Sprintf("SELECT * FROM `%s` WHERE %s;", q.tableReferences, q.whereCondition)
-	q.tableReferences.Words().n(newWord("WHERE", false)).n(q.whereCondition.Words()).n(q.limit.Words()).n(newWord(";", false))
-	return "SELECT * FROM " + q.tableReferences.String()
+	root := newWord("", false)
+	root.n(q.tableReferences.Words()).n(newWord("WHERE", false)).n(q.whereCondition.Words()).n(q.limit.Words()).n(newWord(";", false))
+	return "SELECT * FROM " + root.String()
 }

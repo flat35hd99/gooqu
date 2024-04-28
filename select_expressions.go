@@ -1,46 +1,36 @@
 package gooqu
 
+import (
+	"fmt"
+	"strings"
+)
+
 type selectExpressions struct {
 	exprs []SelectExpression
 }
 
-func (expr selectExpressions) Words() *word {
-	if len(expr.exprs) == 0 {
-		return newWord("*", false)
+func (exprs selectExpressions) String() string {
+	if len(exprs.exprs) == 0 {
+		return "*"
 	}
 
-	// return root
-	if len(expr.exprs) == 1 {
-		return expr.exprs[0].selectWords()
+	hoge := []string{}
+	for _, expr := range exprs.exprs {
+		hoge = append(hoge, expr.String())
 	}
-
-	root := expr.exprs[0].selectWords()
-	last := root
-	for _, exp := range expr.exprs[1:] {
-		separator := newWord(",", false)
-		last.next = separator
-		last = separator
-
-		word := exp.selectWords()
-		last.next = word
-		last = word
-	}
-	return root
+	return strings.Join(hoge, ", ")
 }
 
 type SelectExpression interface {
-	/*
-		return the head of word list
-	*/
-	selectWords() *word
+	String() string
 }
 
 type Column struct {
 	V string
 }
 
-func (c Column) selectWords() *word {
-	return newWord(c.V, true)
+func (c Column) String() string {
+	return fmt.Sprintf("`%s`", c.V)
 }
 
 func newSelectExpressions(exps ...SelectExpression) selectExpressions {

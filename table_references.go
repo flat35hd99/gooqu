@@ -1,5 +1,7 @@
 package gooqu
 
+import "fmt"
+
 // もっと込み入ったものにできる
 // ref: https://dev.mysql.com/doc/refman/8.3/en/join.html
 /*
@@ -22,15 +24,15 @@ joined_table: {
 }
 */
 type tableReferences struct {
-	tableName *word
+	tableName string
 }
 
 func newTableReferences(tableName string) tableReferences {
 	return tableReferences{
-		tableName: newWord(tableName, true),
+		tableName: tableName,
 	}
 }
 
-func (tr tableReferences) Words() *word {
-	return tr.tableName
+func (tr tableReferences) String() string {
+	return fmt.Sprintf("`%s`", tr.tableName)
 }

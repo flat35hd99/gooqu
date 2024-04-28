@@ -1,5 +1,7 @@
 package gooqu
 
+import "fmt"
+
 type limit struct {
 	limit int
 	exist bool
@@ -18,11 +20,10 @@ func (q *Query) Limit(number int) *Query {
 	return q
 }
 
-func (l limit) Words() *word {
+func (l limit) String() string {
 	if !l.exist {
-		return newWord("", false)
+		return ""
 	}
-	root := newWord("LIMIT", false)
-	root.n(newWord(l.limit, false))
-	return root
+
+	return fmt.Sprintf("LIMIT %d", l.limit)
 }

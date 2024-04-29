@@ -30,6 +30,9 @@ type Column struct {
 }
 
 func (c Column) String() string {
+	if c.V == "*" {
+		return c.V
+	}
 	return fmt.Sprintf(`"%s"`, c.V)
 }
 

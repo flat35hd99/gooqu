@@ -37,9 +37,15 @@ func (clause whereClause) String() string {
 
 type fromClause struct {
 	tableReferences tableReferences
+	joinClause      joinClause
+
+	setJoinClause bool
 }
 
 func (clause fromClause) String() string {
+	if clause.setJoinClause {
+		return fmt.Sprintf("FROM %s %s", clause.tableReferences, clause.joinClause)
+	}
 	return fmt.Sprintf("FROM %s", clause.tableReferences)
 }
 

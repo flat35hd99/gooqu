@@ -69,4 +69,12 @@ func TestSelect(t *testing.T) {
 			t.Errorf("expected %s but got %s", expected, query)
 		}
 	})
+
+	t.Run(`SELECT * FROM "users" INNER JOIN "orders" ON "users"."id" = "orders"."user_id";`, func(t *testing.T) {
+		query := gooqu.Select(gooqu.Column{"*"}).From("users").Join(gooqu.Table("orders"), gooqu.On(map[string]string{"users.id": "orders.user_id"})).ToSQL()
+		expected := `SELECT * FROM "users" INNER JOIN "orders" ON "users"."id" = "orders"."user_id";`
+		if query != expected {
+			t.Errorf("expected %s but got %s", expected, query)
+		}
+	})
 }

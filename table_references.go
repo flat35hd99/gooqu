@@ -34,5 +34,5 @@ func newTableReferences(tableName string) tableReferences {
 }
 
 func (tr tableReferences) String() string {
-	return fmt.Sprintf("`%s`", tr.tableName)
+	return fmt.Sprintf(`"%s"`, tr.tableName)
 }

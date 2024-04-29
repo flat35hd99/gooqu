@@ -11,5 +11,5 @@ func newGroupByClause(columnName string) groupByClause {
 }
 
 func (clause groupByClause) String() string {
-	return fmt.Sprintf("GROUP BY `%s`", clause.columnName)
+	return fmt.Sprintf(`GROUP BY "%s"`, clause.columnName)
 }

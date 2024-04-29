@@ -30,7 +30,7 @@ type Column struct {
 }
 
 func (c Column) String() string {
-	return fmt.Sprintf("`%s`", c.V)
+	return fmt.Sprintf(`"%s"`, c.V)
 }
 
 func newSelectExpressions(exps ...SelectExpression) selectExpressions {
@@ -47,9 +47,9 @@ type Count struct {
 
 func (c Count) String() string {
 	if c.aliasName == "" {
-		return fmt.Sprintf("COUNT(`%s`)", c.columnName)
+		return fmt.Sprintf(`COUNT("%s")`, c.columnName)
 	} else {
-		return fmt.Sprintf("COUNT(`%s`) AS `%s`", c.columnName, c.aliasName)
+		return fmt.Sprintf(`COUNT("%s") AS "%s"`, c.columnName, c.aliasName)
 	}
 }
 

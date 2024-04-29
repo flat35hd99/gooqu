@@ -61,7 +61,7 @@ func TestSelect(t *testing.T) {
 		}
 	})
 
-	t.Run("SELECT `id`, `name` FROM `users` WHERE `id` = 1;", func(t *testing.T) {
+	t.Run("SELECT COUNT(`id`), `name` FROM `users` GROUP BY `age`;", func(t *testing.T) {
 		query := gooqu.Select(gooqu.COUNT("id").As("count")).From("users").GroupBy("age").ToSQL()
 
 		expected := "SELECT COUNT(`id`) AS `count` FROM `users` GROUP BY `age`;"

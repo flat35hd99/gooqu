@@ -8,7 +8,7 @@ type limitClause struct {
 }
 
 func (q *Query) Limit(number int) *Query {
-	q.setLimit = true
+	q.setLimitClause = true
 	var l limitClause
 	l.exist = true
 	l.limit = number

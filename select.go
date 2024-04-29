@@ -15,8 +15,8 @@ type Query struct {
 	groupBy      groupByClause
 
 	setWhereClause   bool
-	setGroupBYClause bool
-	setLimit         bool
+	setGroupByClause bool
+	setLimitClause   bool
 }
 
 type selectClause struct {
@@ -69,7 +69,7 @@ func (q *Query) From(table_name string) *Query {
 }
 
 func (q *Query) GroupBy(columnName string) *Query {
-	q.setGroupBYClause = true
+	q.setGroupByClause = true
 	q.groupBy = newGroupByClause(columnName)
 	return q
 }
@@ -78,19 +78,19 @@ func (q Query) ToSQL() string {
 	elements := []fmt.Stringer{
 		q.selectClause, q.fromClause,
 	}
-	if q.setGroupBYClause {
+	if q.setGroupByClause {
 		elements = append(elements, q.groupBy)
 	}
 	if q.setWhereClause {
 		elements = append(elements, q.whereClause)
 	}
-	if q.setLimit {
+	if q.setLimitClause {
 		elements = append(elements, q.limitClause)
 	}
 
-	hoge := []string{}
-	for _, V := range elements {
-		hoge = append(hoge, V.String())
+	stringElements := []string{}
+	for _, v := range elements {
+		stringElements = append(stringElements, v.String())
 	}
-	return strings.Join(hoge, " ") + ";"
+	return strings.Join(stringElements, " ") + ";"
 }

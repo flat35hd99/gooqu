@@ -39,3 +39,25 @@ func newSelectExpressions(exps ...SelectExpression) selectExpressions {
 
 	return selectExprs
 }
+
+type Count struct {
+	columnName string
+	aliasName  string
+}
+
+func (c Count) String() string {
+	if c.aliasName == "" {
+		return fmt.Sprintf("COUNT(`%s`)", c.columnName)
+	} else {
+		return fmt.Sprintf("COUNT(`%s`) AS `%s`", c.columnName, c.aliasName)
+	}
+}
+
+func (c *Count) As(aliasName string) *Count {
+	c.aliasName = aliasName
+	return c
+}
+
+func COUNT(columnName string) *Count {
+	return &Count{columnName: columnName}
+}

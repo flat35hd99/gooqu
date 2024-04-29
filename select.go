@@ -1,40 +1,96 @@
 package gooqu
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type Record map[string]interface{}
 
 type Query struct {
+	selectClause selectClause
+	whereClause  whereClause
+	fromClause   fromClause
+	limitClause  limitClause
+	groupBy      groupByClause
+
+	setWhereClause   bool
+	setGroupBYClause bool
+	setLimit         bool
+}
+
+type selectClause struct {
 	selectExpressions selectExpressions
-	whereCondition    expression
-	tableReferences   tableReferences
-	limit             limit
+}
+
+func (clause selectClause) String() string {
+	return fmt.Sprintf("SELECT %s", clause.selectExpressions.String())
+}
+
+type whereClause struct {
+	whereCondition expression
+}
+
+func (clause whereClause) String() string {
+	return fmt.Sprintf("WHERE %s", clause.whereCondition.String())
+}
+
+type fromClause struct {
+	tableReferences tableReferences
+}
+
+func (clause fromClause) String() string {
+	return fmt.Sprintf("FROM %s", clause.tableReferences)
 }
 
 func Where(record Record) *Query {
 	var query Query
+	query.setWhereClause = true
 	for key, value := range record {
-		query.whereCondition = newExpression(key, value)
+		query.whereClause.whereCondition = newExpression(key, value)
 	}
 	return &query
 }
 
+func Select(exprs ...SelectExpression) *Query {
+	var q Query
+	q.selectClause.selectExpressions = newSelectExpressions(exprs...)
+	return &q
+}
+
 func (q *Query) Select(exprs ...SelectExpression) *Query {
-	q.selectExpressions = newSelectExpressions(exprs...)
+	q.selectClause.selectExpressions = newSelectExpressions(exprs...)
 	return q
 }
 
 func (q *Query) From(table_name string) *Query {
-	q.tableReferences = newTableReferences(table_name)
+	q.fromClause.tableReferences = newTableReferences(table_name)
+	return q
+}
+
+func (q *Query) GroupBy(columnName string) *Query {
+	q.setGroupBYClause = true
+	q.groupBy = newGroupByClause(columnName)
 	return q
 }
 
 func (q Query) ToSQL() string {
-	// TODO: スライスの要素を前から順にpopして、文字列にする、みたいなことをしないといけない。
-	//       そうしないと、flagが無限に増えてパターンが指数関数的に増える。
-	// return fmt.Sprintf("SELECT * FROM `%s` WHERE %s;", q.tableReferences, q.whereCondition)
-	// root := newWord("", false)
-	// root.n(newWord("SELECT", false)).n(newWord(q.selectExpressions.String(), false)).n(newWord("FROM", false)).n(newWord(q.tableReferences.String(), false)).n(newWord("WHERE", false)).n(newWord(q.whereCondition.String(), false)).n(newWord(q.limit.String(), false)).n(newWord(";", false))
-	// return root.String()
-	return fmt.Sprintf("SELECT %s FROM %s WHERE %s %s;", q.selectExpressions, q.tableReferences, q.whereCondition, q.limit)
+	elements := []fmt.Stringer{
+		q.selectClause, q.fromClause,
+	}
+	if q.setGroupBYClause {
+		elements = append(elements, q.groupBy)
+	}
+	if q.setWhereClause {
+		elements = append(elements, q.whereClause)
+	}
+	if q.setLimit {
+		elements = append(elements, q.limitClause)
+	}
+
+	hoge := []string{}
+	for _, V := range elements {
+		hoge = append(hoge, V.String())
+	}
+	return strings.Join(hoge, " ") + ";"
 }

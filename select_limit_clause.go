@@ -2,25 +2,22 @@ package gooqu
 
 import "fmt"
 
-type limit struct {
+type limitClause struct {
 	limit int
 	exist bool
 }
 
 func (q *Query) Limit(number int) *Query {
-	// overwrite
-	// 必要ならログ出すかerror返すかerror設定する
-	// if q.hasLimitClause {
-	// }
-	var l limit
+	q.setLimit = true
+	var l limitClause
 	l.exist = true
 	l.limit = number
 
-	q.limit = l
+	q.limitClause = l
 	return q
 }
 
-func (l limit) String() string {
+func (l limitClause) String() string {
 	if !l.exist {
 		return ""
 	}
